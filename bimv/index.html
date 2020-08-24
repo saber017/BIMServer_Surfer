@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>BIMview</title>
+	<link rel="icon" type="image/png" href="img/application_home.png" />
+	<link href="./css/bootstrap.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="./viewer/lib/jquery.js"></script>
+	<script src="./js/lib/bootstrap.js"></script>
+	<script type="text/javascript" src="./js/lib/jquery.form.js"></script>
+	<link href="./css/index.css" type="text/css" rel="stylesheet" />
+	<link href="./css/font-awesome.css" type="text/css" rel="stylesheet" >
+</head>
+
+<body style="background-color:rgba(127, 255, 212, 0.101)">
+	<div id="loading" style="display: none;">
+		<img class="loading" src="./img/loading.gif">
+	</div>
+	<div class="main">
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand btnBrand">BIM项目管理</a>
+				</div>
+				<div class="collapse navbar-collapse " style="top:4px">
+					<div class="nav navbar-nav navbar-left">
+						<button id="add" type="button" class="btn btn-primary">新建项目</button>
+					</div>
+
+					<div class="nav navbar-nav navbar-right">
+						<a id="username"></a>
+						<!--<button id="logout" type="button" class="btn loginButton btn-primary">登出</button>-->
+					</div>
+				</div>
+			</div>
+		</nav>
+		<div class="maincontainer"></div>
+		<div class="mainStatus statusWrapper">
+			<div class="alert status">
+				<div class="message"></div>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div id="projecttreeContainer" class="projectTreeWrapper">
+			<div id="projectsWrapper">
+				<div id="projects"></div>
+			</div>
+		</div>
+
+		<div class="modal fade in" id="addNewProject" tabindex="-1" role="dialog" style="display: none;">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a class="close" data-dismiss="modal">×</a>
+						<h3>新增BIM项目</h3>
+					</div>
+					<div class="modal-body">
+						<form id="newProjectForm" name="uploadform" action="" method="post"
+							enctype="multipart/form-data" role="form">
+							<div class="form-group">
+								<label for="name">BIM工程名称：</label>
+								<input class="form-control" type="text" id="bimName1" name="bimProjectName" required="required" />
+							</div>
+							<div class="form-group">
+								<label for="name">IFC文件类型：</label>
+								<select id="ifcSchema1" name="bimSchema">
+									<option value="ifc2x3tc1">ifc2x3tc1</option>
+									<option value="ifc4">ifc4</option>
+								</select>
+								<input type="file" id="ifcFile1" name="file" required="required" />
+							</div>
+							<div class="form-group">
+								<label for="name">BIM工程描述：</label>
+									<textarea id="description1" class="form-control" name="bimComment" rows="3">
+							</textarea>
+							</div>
+
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button id="btn_add" type="button" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="modal fade in" id="addSubProject" tabindex="-1" role="dialog" style="display: none;">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a class="close" data-dismiss="modal">×</a>
+						<h3>新增BIM子项目</h3>
+					</div>
+					<div class="modal-body">
+						<form id="newSubProjectForm" name="uploadform" method="post" enctype="multipart/form-data"
+							role="form">
+							<div class="form-group">
+								<label for="name">父工程项目名:</label>
+								<input class="form-control" type="text" id="parentName" 
+									readonly=“readonly”; />
+							</div>
+							<div class="form-group">
+								<label for="name">父工程项目ID:</label>
+								<input class="form-control" type="text" id="parentPoid" name="parentPoid"
+									readonly=“readonly”; />
+							</div>
+							<div class="form-group">
+								<label for="name">BIM工程名称：</label>
+								<input class="form-control" type="text" id="bimName2" name="bimProjectName"
+									required="required" />
+							</div>
+							<div class="form-group">
+								<label for="name">IFC文件类型：</label>
+								<select id="ifcSchema2" name="bimSchema">
+									<option value="ifc2x3tc1">ifc2x3tc1</option>
+									<option value="ifc4">ifc4</option>
+								</select></div>
+							<input type="file" id="ifcFile2" name="file" required="required" /></br>
+							<div class="form-group">
+								<label for="name">BIM工程描述：</label>
+								<textarea id="description2" class="form-control" name="bimComment" rows="3">
+							</textarea>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button id="btn_addSub" type="button" class="btn btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+		<div class="modal fade" id="uploadIFC" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">上传IFC文件</h4>
+					</div>
+					<div class="modal-body">
+						<form id="uploadIFCForm" name="uploadform" method="post" enctype="multipart/form-data"
+							role="form">
+							<div class="form-group">
+								<label for="name">工程项目ID:</label>
+								<input class="form-control" type="text" id="poid3" name="poid" readonly=“readonly”; />
+							</div>
+							<div class="form-group">
+								<label for="name">BIM工程名称：</label>
+								<input class="form-control" type="text" id="bimName3" name="bimProjectName"
+									required="required" readonly=“readonly”; />
+							</div>
+							<div class="form-group">
+								<label for="name">IFC文件类型：</label>
+								<select id="ifcSchema3" name="bimSchema">
+									<option value="ifc2x3tc1">ifc2x3tc1</option>
+									<option value="ifc4">ifc4</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<input type="file" id="ifcFile3" name="file" required="required" />
+							</div>
+							<div class="form-group">
+								<label for="name">BIM工程描述：</label>
+								<textarea id="description3" class="form-control" name="bimComment" rows="3">
+							</textarea>
+							</div>
+						</form>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button id="btn_addIFC" type="button" class="btn btn-primary">上传</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="modal fade" id="deleteProject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">删除项目</h4>
+					</div>
+					<div class="modal-body">
+						<label for="name">工程项目ID:</label>
+						<input class="form-control" type="text" id="poid4" name="poid" readonly=“readonly”; /></br>
+						<label for="name">BIM工程名称：</label>
+						<input class="form-control" type="text" id="bimName4" name="bimProjectName" required="required"
+							readonly=“readonly”; /></br>
+
+						<label for="name">BIM工程描述：</label>
+						<textarea id="description4" class="form-control" name="bimComment" rows="3"
+							readonly=“readonly”;>
+						</textarea>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" id="btn_delete" class="btn btn-primary">确定</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
+
+		<script type="module">
+			import { Address } from "./js/address.js";
+			import { BimServerClient } from "http://localhost:8080/apps/bimserverjavascriptapi/bimserverclient.js"
+			import { ProjectTreeModel } from "./viewer/projecttreemodel.js"
+			import { TreeView } from "./viewer/treeview.js"
+			import { Credentials } from "./js/credentials.js"
+
+			var apiBaseUrl = "http://localhost:8888";
+			var getParam = function (key, strURL) {
+				strURL = strURL || window.location.search;
+				var param = new RegExp("(^|\\?|&)" + key + "=([^&]*)(\\s|&|$)", "i").test(strURL) ?
+					decodeURIComponent(RegExp.$2.replace(/\+/g, " ")) : "";
+				//console.log("param",param);
+				if (param == "" || param == null) {
+					return localStorage.getItem(key);
+				} else {
+					localStorage.setItem(key, param);
+					return param;
+				}
+			};
+			var accessToken = getParam("access_token", top.window.location.hash.substr(1));
+			var token = getParam("bimtoken", top.window.location.hash);
+			var username = getParam("username", top.window.location.hash);
+			$("#username").text("Hello," + username);
+			console.log("accessToken,user", accessToken, username);
+			var api = new BimServerClient(Address.getApiAddress());
+			api.init().then(() => {
+				new Credentials(api).getCredentials().then(() => {
+					loadProjects(api);
+				});
+
+			});
+
+			var options = {
+				target: '',     //把服务器返回的内容放入id为output1的元素中 
+				beforeSubmit: beforeSubmit,   //提交前的回调函数 
+				success: null,     //提交后的回调函数 
+				error: error,
+				//url: url,      //默认是form的action，如果声明，则会覆盖 
+				type: 'post',   //默认是form的method，如果声明，则会覆盖 
+				dataType: 'json',  //接受服务端返回的类型 
+				clearForm: true,  //成功提交后，清除所有表单元素的值 
+				resetForm: true,  //成功提交后，重置所有表单元素的值 
+				//timeout: 3000    //限制请求的时间，当请求大于3秒后，跳出请求 
+			}
+
+			function beforeSubmit(responseText, statusText, xhr, $form) {
+				$("#loading").show();
+			}
+
+			function error(result) {
+				console.log(result);
+				alert("服务器连接异常！");
+				$("#loading").hide();
+			}
+			$("#logout").bind('click', function () {
+				logout();
+			});
+			$("#add").bind('click', function () {
+				$("#addNewProject").modal('show');
+			});
+
+			$("#btn_add").bind('click', function () {
+				var success = function (result) {
+					console.log(result);
+					if (result.code == "411" || result.code == "fail") {
+						alert("服务器连接异常！");
+						$("#loading").hide();
+					} else {
+						if (result.code == 200) {
+
+							alert("SUCCESS");
+							location.reload([true]);
+						}
+					}
+				}
+				options.url = apiBaseUrl + "/myauth/project?access_token=" + accessToken;
+				options.error = error;
+				options.success = success;
+				$("#newProjectForm").ajaxSubmit(options);
+
+
+			});
+
+			$("#btn_addSub").bind('click', function () {
+
+				var success = function (result) {
+					console.log(result);
+					if (result.code == "411" || result.code == "fail") {
+						alert("服务器连接异常！");
+						$("#loading").hide();
+					} else {
+						if (result.code == 200) {
+							alert("SUCCESS");
+							location.reload([true]);
+						}
+					}
+				}
+				options.url = apiBaseUrl + "/myauth/project?access_token=" + accessToken;
+				options.error = error;
+				options.success = success;
+				$("#newSubProjectForm").ajaxSubmit(options);
+
+			});
+
+			$("#btn_delete").bind('click', function () {
+
+				$.ajax({
+					type: "DELETE",
+					// contentType: 'application/json',
+					// dataType: 'json',
+					url: apiBaseUrl + "/myauth/project/" + $("#poid4").val() + "?access_token=" + accessToken,//url
+					success: function (result) {
+						console.log(result);
+						if (result.code == "411" || result.code == "fail") {
+							alert("服务器连接异常！");
+							$("#loading").hide();
+						} else {
+							if (result.code == 200) {
+								alert("delte SUCCESS");
+								location.reload([true]);
+							}
+						}
+					},
+					error: function (result) {
+
+						console.log("result", result);
+						alert("服务器连接异常！");
+					}
+				});
+
+			});
+			$("#btn_addIFC").bind('click', function () {
+				$("#loading").show();
+				// $("#newProjectForm").ajaxSubmit(
+				// 	function (result) {
+				// 		console.log(result);
+				// 		if (result.code == "411" || result.code == "fail") {
+				// 			alert("服务器连接异常！");
+				// 		} else {
+				// 			if (result.code == 200) {
+				// 				alert("SUCCESS");
+				// 			}
+				// 		}
+				// 	});
+				var success = function (result) {
+					console.log(result);
+					if (result.code == "411" || result.code == "fail") {
+						$("#loading").hide();
+						alert("服务器连接异常！");
+
+					} else {
+						if (result.code == 200) {
+							$("#loading").hide();
+							alert("SUCCESS");
+
+							location.reload([true]);
+						}
+					}
+				}
+				options.url = apiBaseUrl + "/myauth/ifc?access_token=" + accessToken;
+				options.error = error;
+				options.success = success;
+				$("#uploadIFCForm").ajaxSubmit(options);
+
+			});
+
+
+
+			function getContextPath() {
+				var curWwwPath = window.document.location.href;
+				var pathName = window.document.location.pathname;
+				var pos = curWwwPath.indexOf(pathName);
+				var localhostPaht = curWwwPath.substring(0, pos);
+				var projectName = pathName.substring(0, pathName.substr(1).indexOf("/") + 1);
+				return (localhostPaht + projectName);
+			};
+			function loadProjects(api) {
+				document.getElementById("projectsWrapper").style.display = "block";
+
+				var treeView = new TreeView(document.getElementById("projects"));
+				var projectTreeModel = new ProjectTreeModel(api, treeView);
+				projectTreeModel.load((node) => {
+					console.log("node", node.project);
+					window.localStorage.setItem('myproject', JSON.stringify(node.project))
+					if (node.project) {
+						window.location.href = "http://localhost:8080/bimview/apps/minimal.html";
+					}
+					// $.ajax({
+					// 	type: "POST",
+					// 	contentType: 'application/json',
+					// 	dataType: 'json',
+					// 	url: apiBaseUrl + "/bim/project",//url
+					// 	data: JSON.stringify(node.project),
+					// 	success: function (result) {
+					// 		console.log(result);
+					// 		if (result.code == "411" || result.code == "fail") {
+					// 			alert("服务器连接异常！");
+					// 		} else {
+					// 			if (result.code == 200) {
+					// 				alert("SUCCESS");
+					// 				window.location.href = apiBaseUrl + '/view/3dview';
+					// 			}
+					// 		}
+					// 	},
+					// 	error: function () {
+					// 		console.log(error);
+					// 		alert("异常！");
+					// 	}
+					// });
+				}
+				);
+
+			}
+
+			function logout() {
+				$.ajax({
+					type: "GET",
+					url: apiBaseUrl + "/myauth/logout?access_token=" + accessToken,
+					success: function (result) {
+						console.log(result);
+						if (result.code == "411" || result.code == "fail") {
+							alert("操作失败");
+						} else {
+							if (result.code == 200) {
+								window.localStorage.removeItem('token')
+								window.location.href = getContextPath() + '/view/login';
+							}
+
+						}
+
+					},
+					error: function (error) {
+						console.log(error);
+						alert("异常！");
+					}
+				});
+			}
+
+
+
+
+		</script>
+
+
+</body>
+
+</html>

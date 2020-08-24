@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>BIM模型查看</title>
+	<link rel="icon" type="image/png" href="../img/application_home.png" />
+	<link href="../css/apps.css" type="text/css" rel="stylesheet" />
+	<link href="../css/apiref.css" type="text/css" rel="stylesheet" />
+	<link href="../css/dev.css" type="text/css" rel="stylesheet" />
+	<link href="../css/tree.css" type="text/css" rel="stylesheet" />
+	<link href="../css/metadata.css" type="text/css" rel="stylesheet" />
+	<link href="../css/3dview.css" type="text/css" rel="stylesheet"/>
+	<link href="../css/font-awesome.css" type="text/css" rel="stylesheet" >
+	<script type="text/javascript" src="../viewer/lib/jquery.js"></script>
+	<script type="text/javascript" src="../viewer/lib/require.js"></script>
+	<script type="text/javascript" src="../js/lib/underscore-min.js">
+	</script>
+</head>
+
+<body>
+	<div>
+		<div id="projecttreeContainer" class="projectTreeWrapper" style="display: none;">
+			<div id="projectsWrapper">
+				<div id="projects"></div>
+			</div>
+			
+		</div>
+		
+	</div>
+		<div class="divfull">
+		<div class="back"> 
+			<button id="back">返回</button>
+		</div>
+		<div id="treeContainer" class="bimsurfer-static-tree">
+		</div>
+		<div id="canvasWrapper">
+			<!-- <canvas id="glcanvas" class="full" ></canvas> -->
+		</div>
+		<div class="divfull">
+			<div id="dataContainer" class="bimsurfer-metadata">选中一个部件，查看部件的属性信息。
+
+			</div>
+			<div id="overlay">
+				<div id="inside">
+					<span style="font-size:75%">
+						<b>[h]</b>隐藏选中项<br>
+						<b>[H]</b> 显示所有<br>
+						<b>[c]</b> 修改选中项颜色 <br>
+						<b>[d]</b> 修改选中项改为透明 <br>
+						<b>[C]</b> 重置所有颜色<br>
+						<b>[ctrl]+鼠标</b> 剖面位置移动<br>
+						<b>[r]</b>全部重置<br>
+					</span>
+					<br>
+				</div>
+			</div>
+			
+		</div>
+		<div id="progressbar" >
+			<div id="progress"></div>
+		</div>
+		<div class="controllerBar">
+			<button id="reset" class="btn btn-default" title="重置"><span class="fa fa-refresh fa-2x"></span></button>
+			<button id="hide" class="btn btn-default" title="隐藏物体"><span class="fa fa-eye-slash fa-2x"></span></button>
+			<button id="show" class="btn btn-default" title="显示所有物体"><span class="fa fa-eye fa-2x"></span></button>
+			<button id="screenshot" class="btn btn-default" title="截图"><span class="fa fa-camera fa-2x"></span></button>
+			<button id="camera-left" class="btn btn-default" title="左"><span class="fa fa-arrow-left fa-2x"></span></button>
+			<button id="camera-right" class="btn btn-default"><span class="fa fa-arrow-right fa-2x"></span></button>
+			<button id="camera-up" class="btn btn-default"><span class="fa fa-arrow-up fa-2x"></span></button>
+			<button id="camera-down" class="btn btn-default"><span class="fa fa-arrow-down fa-2x"></span></button>
+			<button id="camera-top" class="btn btn-default"><span class="fa fa-2x">top</span></button>
+
+		</div>
+	</div>
+	
+</body>
+
+
+<script type="text/javascript">
+	var projectName = 'BIMtest'; 
+	var address = "http://localhost:8080"; 
+	var bimtoken = localStorage.getItem("bimtoken");
+	var myProject=JSON.parse(localStorage.getItem("myproject"));
+	if(myProject){
+		var lastRevisionId = myProject.lastRevisionId;
+	}
+	var metadata;
+	console.log(myProject, lastRevisionId);
+	
+	
+	
+</script>
+<script type="module" src="../js/minimal.js"></script>
+<script type="text/javascript" src="../js/bimtree/js/require.js"></script>
+<!-- <script type="module" src="http://localhost:8080/apps/bimserverjavascriptapi/bimserverclient.js"></script> -->
+<script type="text/javascript" src="../js/bimtree/bimserver/bimserverclient.js"></script>
+<script type="text/javascript" src="../js/bimtree/bimserver/model.js"></script>
+<script type="text/javascript" src="../js/bimtree/bimserver/bimserverapiwebsocket.js"></script>
+<script type="text/javascript" src="../js/bimtree/bimserver/bimserverapipromise.js"></script>
+<script type="text/javascript" src="../js/bimtree/bimserver/geometry.js"></script>
+<script type="text/javascript" src="../js/bimtree/bimserver/ifc2x3tc1.js"></script>
+<script type="text/javascript" src="../js/bimtree/bimserver/ifc4.js"></script>
+<script type="text/javascript" src="../js/bimtree/bimserver/translations_en.js"></script>
+
+<!--用来保存图片-->
+<script src="../js/lib/FileSaver.min.js"></script>
+<script type="text/javascript" src="../js/bimtree/js/login.js"></script>
+<script type="text/javascript" src="../js/bimtree/js/loadModel.js"></script>
+
+</html>

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>BIM Views</title>
+	<link rel="icon" type="image/png" href="img/application_home.png" />
+    <link href="../css/bootstrap.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../viewer/lib/jquery.js"></script>
+</head>
+
+<body>
+<div class="my-fluid-container" style="padding: 15px; padding-bottom: 0px; margin-left: auto; margin-right: auto;">
+    <div class="row" style="margin-left: -15px; margin-right: -15px;">
+        <div class="indexcontainer col-md-12" style="padding-left: 20px; padding-right: 20px;">
+            <div class="login container">
+                <div class="span7">
+                    <div class="header">
+                        <div class="header">
+                            <h1>BIM Views</h1>
+                        </div>
+                    </div>
+                    <div class="form">
+                        <form class="loginForm form-horizontal" id="loginForm" action="">
+                            <legend>登录</legend>
+                            <div class="form-group serverDiv" style="display: none;">
+                                <label class="col-lg-2 control-label">Server</label>
+                                <div class="col-lg-4" style="padding-top: 5px">
+                                    <span class="serverAddress">localhost:8080</span>
+                                    <a class="otherServerLink one-pan-link-mark">Other server</a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label" for="inputEmail">用户账号</label>
+                                <div class="col-lg-4">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">@</span>
+                                        <input name="email" type="email" class="form-control username" id="inputEmail"
+                                            placeholder="Username (e-mail address)" required="required">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label" for="inputPassword">密码</label>
+                                <div class="col-lg-4">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                        <input name="password" type="password" class="form-control password" id="inputPassword"
+                                            placeholder="Password" required="required">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-offset-2 col-lg-10">
+                                    <label class="checkbox"> <input type="checkbox" class="rememberme" id="rememberMe">
+                                        记住我
+                                    </label>
+                                    <button onclick="login()" type="button" class="btn loginButton btn-primary">登录</button>
+                                </div>
+                            </div>
+                            
+                        </form>
+                        <a href="http://localhost:8888/oauth/authorize?client_id=client&response_type=token">第三方登录<a>
+                    </div>
+                </div>
+            </div>
+            <script>
+
+            $.fn.serializeObject = function()  
+            {  
+               var o = {};  
+               var a = this.serializeArray();  
+               $.each(a, function() {  
+                   if (o[this.name]) {  
+                       if (!o[this.name].push) {  
+                           o[this.name] = [o[this.name]];  
+                       }  
+                       o[this.name].push(this.value || '');  
+                   } else {  
+                       o[this.name] = this.value || '';  
+                   }  
+               });  
+               return o;  
+
+            };
+            function getContextPath() {
+            	    var curWwwPath=window.document.location.href;
+            	    var pathName=window.document.location.pathname;
+            	    var pos=curWwwPath.indexOf(pathName);
+            	    var localhostPaht=curWwwPath.substring(0,pos);
+            	    var projectName=pathName.substring(0,pathName.substr(1).indexOf("/")+1);
+            	    return(localhostPaht+projectName);
+            	};
+            	
+            function login() {
+            $.ajax({
+                type: "POST",
+                url: getContextPath()+"/bim/login2" ,//url
+                data: $('#loginForm').serializeArray(),
+                success: function (result) {
+                    console.log(result);
+                    if(result.code=="411"||result.code=="fail"){
+                        alert("服务器连接异常！");
+                    }else{
+                    
+                    	if (result.code == 200) {
+                        	alert("SUCCESS");
+                    	}
+                        window.location.href=getContextPath()+'/view/manager';
+                    }
+                    
+                },
+                error : function(error) {
+                	console.log(error);
+                    alert("异常！");
+                }
+            });
+        }
+
+        
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

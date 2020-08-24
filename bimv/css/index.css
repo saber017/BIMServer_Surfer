@@ -1,0 +1,118 @@
+* {
+	font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.mode {
+	margin: 20px;
+}
+
+.viewer {
+	width: 320px;
+	height: 240px;
+}
+
+.hidden {
+	display: none
+}
+
+.mode {
+	background: #DDDDDD;
+	padding: 10px;
+}
+
+* {
+	font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+	font-size: 14px;
+}
+
+#projectsWrapper {
+	height: 50vh;
+}
+
+#projects {
+	border-radius: 5px;
+	padding: 5px;
+	margin: 10px;
+	background: rgba(200, 200, 255, 0.34);
+	width: 100%;
+}
+
+.arrow {
+	/*float:left;
+	 padding-top: 6px; */
+	width: 16px;
+	height: 16px;
+	opacity: 0;
+}
+
+.arrow:hover {
+	cursor: pointer;
+}
+
+.arrowclosed {
+	/* width: 16px;
+            height: 16px;
+            border-left: 5px solid #0f0f0f;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent; */
+	background-image: url("../img/black_arrow.png"); 
+	opacity: 1;
+}
+
+.arrowclosed:hover {
+	background-image: url("../img/blue_arrow.png");
+	opacity: 1;
+}
+
+.arrowopen {
+	background-image: url("../img/black_arrow_down.png");
+	opacity: 1;
+}
+
+.arrowopen:hover {
+	background-image: url("../img/blue_arrow_down.png");
+	opacity: 1;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+
+
+#loading{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);z-index:15000;}
+
+#loading img{position:absolute;top:50%;left:50%;width:66px;height:66px;margin-top:-15px;margin-left:-15px;}
+
+.nodetype{
+	color:#074b23;
+	cursor: pointer;
+	padding-left: 2px;
+	top:6px;
+}
+
+.nodetype1{
+	padding-left: 2px;
+	top:6px;
+}
+
+.colorChange{
+	
+}
+.colorChange:hover{
+	background-color: rgba(99, 172, 221, 0.226); 
+}
+
+.mybtn{
+	margin-left:4px;
+	margin-top: 2px;
+	padding: 4px 4px;
+	font-size: 12px;
+	float: none;
+}
